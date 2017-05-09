@@ -1,0 +1,13 @@
+/*Container for Input*/
+.container {
+  /*Screen size of Apple Watch 38mm*/
+  height: 340px;
+  width: 272px;
+
+  /*Display the border to indicate where to input*/
+  border: 3px solid black;
+
+  /*Center the screen*/
+  display: block;
+  margin: auto;
+}
