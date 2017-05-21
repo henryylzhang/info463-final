@@ -66,6 +66,7 @@
 .N, .S, .W, .E, .NW, .NE, .SW, .SE {
   position: relative;
   text-align: center;
+  cursor: default;
 
   /*Make the text and teardrops non-selectable*/
   -webkit-touch-callout: none;
