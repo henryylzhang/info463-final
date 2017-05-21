@@ -7,3 +7,92 @@
   /*Display the border to indicate where to input*/
   border: 3px solid black;
 }
+
+/*N, W, and E teardrops*/
+.N-svg {
+  -ms-transform: rotate(180deg); /* IE 9 */
+  -webkit-transform: rotate(180deg); /* Chrome, Safari, Opera */
+  transform: rotate(180deg);
+}
+
+.W-svg {
+  -ms-transform: rotate(90deg); /* IE 9 */
+  -webkit-transform: rotate(90deg); /* Chrome, Safari, Opera */
+  transform: rotate(90deg);
+}
+
+.E-svg {
+  -ms-transform: rotate(-90deg); /* IE 9 */
+  -webkit-transform: rotate(-90deg); /* Chrome, Safari, Opera */
+  transform: rotate(-90deg);
+}
+
+/*NW, SW, NE, and SE teardrops*/
+.NW-svg {
+  -ms-transform: rotate(135deg); /* IE 9 */
+  -webkit-transform: rotate(135deg); /* Chrome, Safari, Opera */
+  transform: rotate(135deg);
+}
+
+.SW-svg {
+  -ms-transform: rotate(45deg); /* IE 9 */
+  -webkit-transform: rotate(45deg); /* Chrome, Safari, Opera */
+  transform: rotate(45deg);
+}
+
+.NE-svg {
+  -ms-transform: rotate(-135deg); /* IE 9 */
+  -webkit-transform: rotate(-135deg); /* Chrome, Safari, Opera */
+  transform: rotate(-135deg);
+}
+
+.SE-svg {
+  -ms-transform: rotate(-45deg); /* IE 9 */
+  -webkit-transform: rotate(-45deg); /* Chrome, Safari, Opera */
+  transform: rotate(-45deg);
+}
+
+/*Alter the size of the teardrops to fit container*/
+.N-svg, .S-svg, .W-svg, .E-svg, .NW-svg, .NE-svg, .SW-svg, .SE-svg {
+  width: 100%;
+}
+
+/*Make the E teardrop float to the right of the container*/
+.E {
+  float: right;
+}
+
+/*Set up the container for text alignment in teardrops*/
+.N, .S, .W, .E, .NW, .NE, .SW, .SE {
+  position: relative;
+  text-align: center;
+
+  /*Make the text and teardrops non-selectable*/
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+/*Align the text to be properly centered in teardrops*/
+.text {
+  color: white;
+  font-weight: bold;
+  position: absolute;
+  top: calc(50% - 12px);
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1;
+}
+
+/*Additional text re-alignment*/
+.NW .text, .W .text, .SW .text {
+  right: 7px;
+}
+
+.NE .text, .SE .text {
+  left: 7px;
+}
