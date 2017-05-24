@@ -34,10 +34,22 @@
   transform: rotate(135deg);
 }
 
+.NW-svg-outward {
+  -ms-transform: rotate(315deg); /* IE 9 */
+  -webkit-transform: rotate(315deg); /* Chrome, Safari, Opera */
+  transform: rotate(315deg);
+}
+
 .SW-svg {
   -ms-transform: rotate(45deg); /* IE 9 */
   -webkit-transform: rotate(45deg); /* Chrome, Safari, Opera */
   transform: rotate(45deg);
+}
+
+.SW-svg-outward {
+  -ms-transform: rotate(225deg); /* IE 9 */
+  -webkit-transform: rotate(225deg); /* Chrome, Safari, Opera */
+  transform: rotate(225deg);
 }
 
 .NE-svg {
@@ -46,10 +58,22 @@
   transform: rotate(-135deg);
 }
 
+.NE-svg-outward {
+  -ms-transform: rotate(-315deg); /* IE 9 */
+  -webkit-transform: rotate(-315deg); /* Chrome, Safari, Opera */
+  transform: rotate(-315deg);
+}
+
 .SE-svg {
   -ms-transform: rotate(-45deg); /* IE 9 */
   -webkit-transform: rotate(-45deg); /* Chrome, Safari, Opera */
   transform: rotate(-45deg);
+}
+
+.SE-svg-outward {
+  -ms-transform: rotate(-225deg); /* IE 9 */
+  -webkit-transform: rotate(-225deg); /* Chrome, Safari, Opera */
+  transform: rotate(-225deg);
 }
 
 /*Alter the size of the teardrops to fit container*/

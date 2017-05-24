@@ -29,8 +29,21 @@ function addLetter(letter) {
   });
 }
 
+// update the teardrops
+function updateTeardrops() {
+  // remove teardrops' text
+  $(".text").empty();
+
+  // change direction of the NW, NE, SW, and SE teardrops
+  $(".NW-svg").addClass("NW-svg-outward");
+  $(".NE-svg").addClass("NE-svg-outward");
+  $(".SW-svg").addClass("SW-svg-outward");
+  $(".SE-svg").addClass("SE-svg-outward");
+}
+
 // resets the text to the original layout
 function reset() {
+  // change the content in teardrops to original layout
   $(".NE-text").text("ABCD");
   $(".N-text").text("EFGH");
   $(".NW-text").text("IJKL");
@@ -39,6 +52,12 @@ function reset() {
   $(".S-text").text("TUV");
   $(".SE-text").text("WXYZ");
   $(".E-text").html('<i class="fa fa-arrow-left fa-2x" aria-hidden="true"></i>');
+
+  // rotate the NE, NE, SW, and SE teardrops to original position
+  $(".NW-svg").removeClass("NW-svg-outward");
+  $(".NE-svg").removeClass("NE-svg-outward");
+  $(".SW-svg").removeClass("SW-svg-outward");
+  $(".SE-svg").removeClass("SE-svg-outward");
 }
 
 function north() {
@@ -52,8 +71,8 @@ function north() {
     // reset the layout
     reset();
   } else {
-    // remove all of the teardrops' text
-    $(".text").empty();
+    // update the teardrop layout
+    updateTeardrops();
 
     // update text with corresponding letters
     $(".N-text").text("E");
@@ -74,8 +93,8 @@ function west() {
     // reset the layout
     reset();
   } else {
-    // remove all of the teardrops' text
-    $(".text").empty();
+    // update the teardrop layout
+    updateTeardrops();
 
     // update text with corresponding letters
     $(".N-text").text("M");
@@ -96,8 +115,8 @@ function south() {
     // reset the layout
     reset();
   } else {
-    // remove all of the teardrops' text
-    $(".text").empty();
+    // update the teardrop layout
+    updateTeardrops();
 
     // update text with corresponding letters
     $(".N-text").text("T");
@@ -132,8 +151,8 @@ function northeast() {
     // reset the layout
     reset();
   } else {
-    // otherwise, remove all of the teardrops' text
-    $(".text").empty();
+    // update the teardrop layout
+    updateTeardrops();
 
     // update text with corresponding letters
     $(".N-text").text("A");
@@ -149,8 +168,8 @@ function northwest() {
     // reset the layout
     reset();
   } else {
-    // otherwise, remove all of the teardrops' text
-    $(".text").empty();
+    // update the teardrop layout
+    updateTeardrops();
 
     // update text with corresponding letters
     $(".N-text").text("I");
@@ -166,8 +185,8 @@ function southwest() {
     // reset the layout
     reset();
   } else {
-    // otherwise, remove all of the teardrops' text
-    $(".text").empty();
+    // update the teardrop layout
+    updateTeardrops();
 
     // update text with corresponding letters
     $(".N-text").text("Q");
@@ -182,8 +201,8 @@ function southeast() {
     // reset the layout
     reset();
   } else {
-    // otherwise, remove all of the teardrops' text
-    $(".text").empty();
+    // update the teardrop layout
+    updateTeardrops();
 
     // update text with corresponding letters
     $(".N-text").text("W");
