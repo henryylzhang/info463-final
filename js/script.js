@@ -18,6 +18,181 @@ function getAngle(x1, y1, x2, y2) {
   return angle;
 }
 
+// adds a letter to the input field
+function addLetter(letter) {
+  // converts the letter to lowercase
+  letter = letter.toLowerCase();
+
+  // adds the letter
+  $(".form-control").val(function() {
+    return this.value + letter;
+  });
+}
+
+// resets the text to the original layout
+function reset() {
+  $(".NE-text").text("ABCD");
+  $(".N-text").text("EFGH");
+  $(".NW-text").text("IJKL");
+  $(".W-text").text("MNOP");
+  $(".SW-text").text("QRS");
+  $(".S-text").text("TUV");
+  $(".SE-text").text("WXYZ");
+  $(".E-text").html('<i class="fa fa-arrow-left fa-2x" aria-hidden="true"></i>');
+}
+
+function north() {
+  if ($(".N-text").text().length <= 1) {
+    // if north teardrop contains a letter
+    if ($(".N-text").text().length === 1) {
+      // add the letter
+      addLetter($(".N-text").text());
+    }
+
+    // reset the layout
+    reset();
+  } else {
+    // remove all of the teardrops' text
+    $(".text").empty();
+
+    // update text with corresponding letters
+    $(".N-text").text("E");
+    $(".W-text").text("F");
+    $(".S-text").text("G");
+    $(".E-text").text("H");
+  }
+}
+
+function west() {
+  if ($(".W-text").text().length <= 1) {
+    // if west teardrop contains a letter
+    if ($(".W-text").text().length === 1) {
+      // add the letter
+      addLetter($(".W-text").text());
+    }
+
+    // reset the layout
+    reset();
+  } else {
+    // remove all of the teardrops' text
+    $(".text").empty();
+
+    // update text with corresponding letters
+    $(".N-text").text("M");
+    $(".W-text").text("N");
+    $(".S-text").text("O");
+    $(".E-text").text("P");
+  }
+}
+
+function south() {
+  if ($(".S-text").text().length <= 1) {
+    // if south teardrop contains a letter
+    if ($(".S-text").text().length === 1) {
+      // add the letter
+      addLetter($(".S-text").text());
+    }
+
+    // reset the layout
+    reset();
+  } else {
+    // remove all of the teardrops' text
+    $(".text").empty();
+
+    // update text with corresponding letters
+    $(".N-text").text("T");
+    $(".W-text").text("U");
+    $(".S-text").text("V");
+  }
+}
+
+function east() {
+  // if the east teardrop contains a letter
+  if ($(".E-text").text().length === 1) {
+    // add the letter
+    addLetter($(".E-text").text());
+
+    // reset the layout
+    reset();
+  } else {
+    // otherwise, remove a letter if the teardrop has the backarrow
+    if ($(".form-control").val().length > 0) {
+      // grab the input without the most recent letter
+      var formerInput = $(".form-control").val().substring(0, $(".form-control").val().length - 1);
+
+      // update the input without the most recent letter
+      $(".form-control").val(formerInput);
+    }
+  }
+}
+
+function northeast() {
+  // if the northeast teardrop doesn't contain any letters
+  if ($(".NE-text").text().length === 0) {
+    // reset the layout
+    reset();
+  } else {
+    // otherwise, remove all of the teardrops' text
+    $(".text").empty();
+
+    // update text with corresponding letters
+    $(".N-text").text("A");
+    $(".W-text").text("B");
+    $(".S-text").text("C");
+    $(".E-text").text("D");
+  }
+}
+
+function northwest() {
+  // if the northwest teardrop doesn't contain any letters
+  if ($(".NW-text").text().length === 0) {
+    // reset the layout
+    reset();
+  } else {
+    // otherwise, remove all of the teardrops' text
+    $(".text").empty();
+
+    // update text with corresponding letters
+    $(".N-text").text("I");
+    $(".W-text").text("J");
+    $(".S-text").text("K");
+    $(".E-text").text("L");
+  }
+}
+
+function southwest() {
+  // if the southwest teardrop doesn't contain any letters
+  if ($(".SW-text").text().length === 0) {
+    // reset the layout
+    reset();
+  } else {
+    // otherwise, remove all of the teardrops' text
+    $(".text").empty();
+
+    // update text with corresponding letters
+    $(".N-text").text("Q");
+    $(".W-text").text("R");
+    $(".S-text").text("S");
+  }
+}
+
+function southeast() {
+  // if the southeast teardrop doesn't contain any letters
+  if ($(".SE-text").text().length === 0) {
+    // reset the layout
+    reset();
+  } else {
+    // otherwise, remove all of the teardrops' text
+    $(".text").empty();
+
+    // update text with corresponding letters
+    $(".N-text").text("W");
+    $(".W-text").text("X");
+    $(".S-text").text("Y");
+    $(".E-text").text("Z");
+  }
+}
+
 $(document).ready(function() {
   // initialize the first point
   var x1 = 0;
@@ -38,32 +213,32 @@ $(document).ready(function() {
     if ((x1 !== event.pageX) && (y1 !== event.pageY)) {
       // check the direction (with a margin error of 20 degrees)
       if (angle > 20 && angle <= 65) {
-        console.log("direction: NW");
+        northwest();
       } else if (angle > 65 && angle <= 115) {
-        console.log("direction: N");
+        north();
       } else if (angle > 115 && angle <= 160) {
-        console.log("direction: NE");
+        northeast();
       } else if (angle > 160 && angle <= 200) {
-        console.log("direction: E");
+        east();
       } else if (angle > 200 && angle <= 250) {
-        console.log("direction: SE");
+        southeast();
       } else if (angle > 250 && angle <= 290) {
-        console.log("direction: S");
+        south();
       } else if (angle > 290 && angle <= 340) {
-        console.log("direction: SW");
+        southwest();
       } else { // angle > 340 or angle is <= 20
-        console.log("direction: W");
+        west();
       }
     } else if ((x1 === event.pageX && y1 !== event.pageY) || (x1 !== event.pageX && y1 === event.pageY)) {
       // if the X-axis is the same, but Y-axis isn't (or vice versa), check if the angle is exactly N, E, S, or W
       if (angle === 0) {
-        console.log("direction: W");
+        west();
       } else if (angle === 90) {
-        console.log("direction: N");
+        north();
       } else if (angle === 180) {
-        console.log("direction: E");
+        east();
       } else { // angle === 270
-        console.log("direction: S");
+        south();
       }
     }
   });
