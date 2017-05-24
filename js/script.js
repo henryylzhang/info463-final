@@ -259,6 +259,16 @@ $(document).ready(function() {
       } else { // angle === 270
         south();
       }
+    } else {
+      // adds space to input if X-axis and Y-axis are the same
+      $(".form-control").val(function() {
+        return this.value + " ";
+      });
     }
+  });
+
+  // submits the text input upon double-clicking
+  $(".container").dblclick(function() {
+    $("form").submit();
   });
 });
