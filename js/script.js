@@ -60,12 +60,53 @@ function reset() {
   $(".SE-svg").removeClass("SE-svg-outward");
 }
 
+// generates 2 words using predictive text based on the input phrase
+function predictiveText(word) {
+  // go through the dictionary
+  $.get("google-10000-english-usa-no-swears-short.txt", function(data) {
+    // initiate an array that holds the top two words
+    var words = [];
+
+    // read each line within dictionary
+    var lines = data.split("\n");
+
+    // check each line to see if it contains the phrase
+    lines.forEach(function(line) {
+      if (words.length < 2) {
+        if (line.substring(0, word.length) === word) {
+          words.push(line);
+        }
+      }
+    });
+
+    // if the previous generated words exist, erase them
+    if ($(".words").text().length > 0) {
+      $(".words").empty();
+    }
+
+    // add buttons for the new generated words
+    words.forEach(function(word) {
+      $(".words").append('<button type="button" class="btn btn-default col-xs-6">' + word + '</button>');
+    });
+  }, "text");
+}
+
 function north() {
   if ($(".N-text").text().length <= 1) {
     // if north teardrop contains a letter
     if ($(".N-text").text().length === 1) {
       // add the letter
       addLetter($(".N-text").text());
+
+      // if the input contains anything
+      if ($(".form-control").val().length > 0) {
+        // grab the most recent word the user is typing
+        var sentence = $(".form-control").val().split(" ");
+        var recentWord = sentence[sentence.length - 1];
+
+        // use predictive text on the most recent word
+        predictiveText(recentWord);
+      }
     }
 
     // reset the layout
@@ -88,6 +129,16 @@ function west() {
     if ($(".W-text").text().length === 1) {
       // add the letter
       addLetter($(".W-text").text());
+
+      // if the input contains anything
+      if ($(".form-control").val().length > 0) {
+        // grab the most recent word the user is typing
+        var sentence = $(".form-control").val().split(" ");
+        var recentWord = sentence[sentence.length - 1];
+
+        // use predictive text on the most recent word
+        predictiveText(recentWord);
+      }
     }
 
     // reset the layout
@@ -110,6 +161,16 @@ function south() {
     if ($(".S-text").text().length === 1) {
       // add the letter
       addLetter($(".S-text").text());
+
+      // if the input contains anything
+      if ($(".form-control").val().length > 0) {
+        // grab the most recent word the user is typing
+        var sentence = $(".form-control").val().split(" ");
+        var recentWord = sentence[sentence.length - 1];
+
+        // use predictive text on the most recent word
+        predictiveText(recentWord);
+      }
     }
 
     // reset the layout
@@ -142,6 +203,16 @@ function east() {
       // update the input without the most recent letter
       $(".form-control").val(formerInput);
     }
+  }
+
+  // if the input contains anything
+  if ($(".form-control").val().length > 0) {
+    // grab the most recent word the user is typing
+    var sentence = $(".form-control").val().split(" ");
+    var recentWord = sentence[sentence.length - 1];
+
+    // use predictive text on the most recent word
+    predictiveText(recentWord);
   }
 }
 

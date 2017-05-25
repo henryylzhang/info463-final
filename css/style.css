@@ -121,3 +121,8 @@
 .NE .text, .SE .text {
   left: 7px;
 }
+
+/*Generated word buttons*/
+.words {
+  margin-top: 15px;
+}
