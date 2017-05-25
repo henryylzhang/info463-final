@@ -194,15 +194,12 @@ function east() {
 
     // reset the layout
     reset();
-  } else {
-    // otherwise, remove a letter if the teardrop has the backarrow
-    if ($(".form-control").val().length > 0) {
-      // grab the input without the most recent letter
-      var formerInput = $(".form-control").val().substring(0, $(".form-control").val().length - 1);
+  } else { // otherwise, remove a letter if the teardrop has the backarrow
+    // grab the input without the most recent letter
+    var formerInput = $(".form-control").val().substring(0, $(".form-control").val().length - 1);
 
-      // update the input without the most recent letter
-      $(".form-control").val(formerInput);
-    }
+    // update the input without the most recent letter
+    $(".form-control").val(formerInput);
   }
 
   // if the input contains anything
@@ -213,6 +210,8 @@ function east() {
 
     // use predictive text on the most recent word
     predictiveText(recentWord);
+  } else {
+    $(".words").empty();
   }
 }
 
