@@ -78,16 +78,38 @@ function predictiveText(word) {
         }
       }
     });
-
+    
     // if the previous generated words exist, erase them
-    if ($(".words").text().length > 0) {
-      $(".words").empty();
+    if ($(".word1").text().length > 0) {
+      $(".word1").empty();
+    }
+    if ($(".word2").text().length > 0) {
+      $(".word2").empty();
     }
 
     // add buttons for the new generated words
-    words.forEach(function(word) {
-      $(".words").append('<button type="button" class="btn btn-default col-xs-6">' + word + '</button>');
-    });
+    if (words.length > 0) {
+      // show the container of the buttons
+      $(".words").show();
+
+      // add the first word to the first button
+      $(".word1").append(words[0]);
+
+      // if the found word only matches one word
+      if (words.length === 1) {
+        // hide the second button
+        $(".word2").hide();
+      } else {
+        // otherwise, show the second button
+        $(".word2").show();
+
+        // add the second word to the second button
+        $(".word2").append(words[1]);
+      }
+    } else {
+      // hide the container if no words are found
+      $(".words").hide();
+    }
   }, "text");
 }
 
@@ -211,7 +233,12 @@ function east() {
     // use predictive text on the most recent word
     predictiveText(recentWord);
   } else {
-    $(".words").empty();
+    // empty the words
+    $(".word1").empty();
+    $(".word2").empty();
+
+    // hide the container of buttons
+    $(".words").hide();
   }
 }
 
@@ -283,18 +310,21 @@ function southeast() {
 }
 
 $(document).ready(function() {
+  // hide the empty word buttons
+  $(".words").hide();
+
   // initialize the first point
   var x1 = 0;
   var y1 = 0;
 
   // update the first point once mouse is held down
-  $(".container").mousedown(function(event) {
+  $(".tipckle-redesign").mousedown(function(event) {
     x1 = event.pageX;
     y1 = event.pageY;
   });
 
   // once the mouse is released...
-  $(".container").mouseup(function(event) {
+  $(".tipckle-redesign").mouseup(function(event) {
     // calculate the angle from the first point with current point
     var angle = getAngle(x1, y1, event.pageX, event.pageY);
 
@@ -337,8 +367,35 @@ $(document).ready(function() {
     }
   });
 
+  // replaces the most recent word with a predictive word
+  $("button").click(function() {
+    // grab the current sentence
+    var sentence = $(".form-control").val().split(" ");
+
+    // replace the latest word with the word in the button
+    sentence[sentence.length - 1] = $(this).text();
+
+    // generate a sentence containing predictive word
+    var predictSentence = "";
+    sentence.forEach(function(word) {
+      predictSentence += word + " ";
+    });
+    
+    // update the input field with sentence containing predictive word
+    $(".form-control").val(function() {
+      return predictSentence;
+    });
+
+    // empty the words in the buttons
+    $(".word1").empty();
+    $(".word2").empty();
+
+    // hide the container of buttons
+    $(".words").hide();
+  });
+
   // submits the text input upon double-clicking
-  $(".container").dblclick(function() {
+  $(".tipckle-redesign").dblclick(function() {
     $("form").submit();
   });
 });
