@@ -76,6 +76,10 @@
   transform: rotate(-225deg);
 }
 
+.NW-svg-outward, .SW-svg-outward, .NE-svg-outward, .SE-svg-outward {
+  opacity: 0.75;
+}
+
 /*Alter the size of the teardrops to fit container*/
 .N-svg, .S-svg, .W-svg, .E-svg, .NW-svg, .NE-svg, .SW-svg, .SE-svg {
   width: 100%;
