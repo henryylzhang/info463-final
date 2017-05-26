@@ -63,7 +63,7 @@ function reset() {
 // generates 2 words using predictive text based on the input phrase
 function predictiveText(word) {
   // go through the dictionary
-  $.get("google-10000-english-usa-no-swears-short.txt", function(data) {
+  $.get("google-10000-english-usa-no-swears.txt", function(data) {
     // initiate an array that holds the top two words
     var words = [];
 
