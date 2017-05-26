@@ -53,6 +53,9 @@ function reset() {
   $(".SE-text").text("WXYZ");
   $(".E-text").html('<i class="fa fa-arrow-left fa-2x" aria-hidden="true"></i>');
 
+  // re-enable the E teardrop
+  $(".E").show();
+
   // rotate the NE, NE, SW, and SE teardrops to original position
   $(".NW-svg").removeClass("NW-svg-outward");
   $(".NE-svg").removeClass("NE-svg-outward");
@@ -205,6 +208,9 @@ function south() {
     $(".N-text").text("T");
     $(".W-text").text("U");
     $(".S-text").text("V");
+
+    // disable the east teardrop
+    $(".E").hide();
   }
 }
 
@@ -216,7 +222,7 @@ function east() {
 
     // reset the layout
     reset();
-  } else { // otherwise, remove a letter if the teardrop has the backarrow
+  } else if ($(".E-text").html() === '<i class="fa fa-arrow-left fa-2x" aria-hidden="true"></i>') { // otherwise, remove a letter if the teardrop has the backarrow
     // grab the input without the most recent letter
     var formerInput = $(".form-control").val().substring(0, $(".form-control").val().length - 1);
 
@@ -289,6 +295,9 @@ function southwest() {
     $(".N-text").text("Q");
     $(".W-text").text("R");
     $(".S-text").text("S");
+
+    // disable the east teardrop
+    $(".E").hide();
   }
 }
 
