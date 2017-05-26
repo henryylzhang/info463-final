@@ -236,8 +236,13 @@ function east() {
     var sentence = $(".form-control").val().split(" ");
     var recentWord = sentence[sentence.length - 1];
 
-    // use predictive text on the most recent word
-    predictiveText(recentWord);
+    // if the recent word exists
+    if (recentWord.length > 0) {
+      // use predictive text on it
+      predictiveText(recentWord);
+    } else {
+      $(".words").hide();
+    }
   } else {
     // empty the words
     $(".word1").empty();
