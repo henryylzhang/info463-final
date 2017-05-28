@@ -133,6 +133,22 @@ function predictiveText(word) {
   }, "text");
 }
 
+// returns a list of set phrases in the subject + verb + object format
+function generatePhrases() {
+  var phrases = [
+    "i flew a kite", "i paint a picture", "elizabeth caught tigers", "peter wears glasses", "i ironed a shirt",
+    "i drink tea", "i replace a fuse", "they steal things", "they ate some crackers", "those students carried a computer",
+    "that farmer irons a shirt", "ed rode a unicycle", "they replace a fuse", "they serve dinner", "bruce drank water",
+    "they washed clothes", "those pilots wore a hat", "that guard fed the baby", "that journalist used a computer", "that musician plays baseball",
+    "they wore a hat", "i draw a map", "that police officer uses a computer", "i drive a sports car", "those lawyers stole money",
+    "buddy played the organ", "they peeled a banana", "those teachers set an alarm clock", "alfred bought some video tapes", "those lawyers eat fish",
+    "those doctors smell a flower", "that doctor eats a sandwich", "i picked a peach", "they take a shower", "those fishermen read a magazine",
+    "they spend money", "those bus drivers fry some bacon", "that farmer read the story", "those plumbers tie a knot", "that barber rows a boat",
+    "they ironed a shirt", "that gardener painted the door", "they mailed the package", "they play basketball", "rosie mails a letter"
+  ];
+  return phrases;
+}
+
 function north() {
   if ($(".N-text").text().length <= 1) {
     // if north teardrop contains a letter
@@ -297,6 +313,19 @@ function southeast() {
 $(document).ready(function() {
   // hide the empty word buttons
   $(".words").hide();
+
+  // initialize the list of phrases
+  var phrases = generatePhrases();
+
+  // randomly choose a phrase from the list of phrases
+  var index = Math.round(Math.random() * (phrases.length - 1));
+  var phrase = phrases[index];
+
+  // removes the phrase from the list
+  phrases.splice(index, 1);
+
+  // display the phrase
+  $(".phrase").append(phrase);
 
   // initialize the first point
   var x1 = 0;
