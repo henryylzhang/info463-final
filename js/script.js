@@ -83,7 +83,7 @@ function reset() {
 // generates 2 words using predictive text based on the input phrase
 function predictiveText(word) {
   // go through the dictionary
-  $.get("google-10000-english-usa-no-swears.txt", function(data) {
+  $.get("dict/google-10000-english-usa-no-swears.txt", function(data) {
     // initiate an array that holds the top two words
     var words = [];
 
@@ -133,19 +133,26 @@ function predictiveText(word) {
   }, "text");
 }
 
-// returns a list of set phrases in the subject + verb + object format
+// generates phrases
 function generatePhrases() {
-  var phrases = [
-    "i flew a kite", "i paint a picture", "elizabeth caught tigers", "peter wears glasses", "i ironed a shirt",
-    "i drink tea", "i replace a fuse", "they steal things", "they ate some crackers", "those students carried a computer",
-    "that farmer irons a shirt", "ed rode a unicycle", "they replace a fuse", "they serve dinner", "bruce drank water",
-    "they washed clothes", "those pilots wore a hat", "that guard fed the baby", "that journalist used a computer", "that musician plays baseball",
-    "they wore a hat", "i draw a map", "that police officer uses a computer", "i drive a sports car", "those lawyers stole money",
-    "buddy played the organ", "they peeled a banana", "those teachers set an alarm clock", "alfred bought some video tapes", "those lawyers eat fish",
-    "those doctors smell a flower", "that doctor eats a sandwich", "i picked a peach", "they take a shower", "those fishermen read a magazine",
-    "they spend money", "those bus drivers fry some bacon", "that farmer read the story", "those plumbers tie a knot", "that barber rows a boat",
-    "they ironed a shirt", "that gardener painted the door", "they mailed the package", "they play basketball", "rosie mails a letter"
-  ];
+  // initialize the list of phrases
+  var phrases = [];
+
+  // grab the file that contains phrases
+  var phrasesFile = new XMLHttpRequest();
+
+  // add every phrase to the list
+  phrasesFile.open("GET", "dict/phrases2.txt", false);
+  phrasesFile.onreadystatechange = function () {
+    if(phrasesFile.readyState === 4) {
+      if(phrasesFile.status === 200 || phrasesFile.status == 0) {
+        phrases = phrasesFile.responseText.split("\n");
+      }
+    }
+  };
+  phrasesFile.send(null);
+
+  // return the list of phrases
   return phrases;
 }
 
@@ -316,6 +323,11 @@ $(document).ready(function() {
 
   // initialize the list of phrases
   var phrases = generatePhrases();
+
+  // make the list of phrases all lowercase
+  phrases = phrases.map(function(phrase) {
+    return phrase.toLowerCase();
+  });
 
   // randomly choose a phrase from the list of phrases
   var index = Math.round(Math.random() * (phrases.length - 1));
