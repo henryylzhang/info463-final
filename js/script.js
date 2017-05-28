@@ -156,6 +156,19 @@ function generatePhrases() {
   return phrases;
 }
 
+// randomly chooses a phrase
+function choosePhrase(phrases) {
+  // randomly choose a phrase from the list of phrases
+  var index = Math.round(Math.random() * (phrases.length - 1));
+  var phrase = phrases[index];
+
+  // removes the phrase from the list
+  phrases.splice(index, 1);
+
+  // display a new phrase
+  $(".phrase").append(phrase);
+}
+
 function north() {
   if ($(".N-text").text().length <= 1) {
     // if north teardrop contains a letter
@@ -329,15 +342,11 @@ $(document).ready(function() {
     return phrase.toLowerCase();
   });
 
-  // randomly choose a phrase from the list of phrases
-  var index = Math.round(Math.random() * (phrases.length - 1));
-  var phrase = phrases[index];
-
-  // removes the phrase from the list
-  phrases.splice(index, 1);
-
-  // display the phrase
-  $(".phrase").append(phrase);
+  // initialize the counter of phrases
+  var phraseCounter = 0;
+  
+  // choose a phrase
+  choosePhrase(phrases);
 
   // initialize the first point
   var x1 = 0;
@@ -422,6 +431,27 @@ $(document).ready(function() {
 
   // submits the text input upon double-clicking
   $(".tipckle-redesign").dblclick(function() {
-    $("form").submit();
+    // increase the counter
+    phraseCounter++;
+
+    // remove the current phrase
+    $(".phrase").empty();
+
+    // if the counter reaches 45
+    if (phraseCounter === 45) {
+      // empty the input
+      $(".form-control").val("");
+
+      // alert that testing has ended
+      alert("Test is over.");
+    } else {
+      // StreamAnalyzer goes here
+
+      // empty the input
+      $(".form-control").val("");
+
+      // choose and display a new phrase
+      choosePhrase(phrases);
+    }
   });
 });
