@@ -331,6 +331,9 @@ function southeast() {
 }
 
 $(document).ready(function() {
+  // show the blinking vertical bar
+  $("input").focus();
+
   // hide the empty word buttons
   $(".words").hide();
 
@@ -352,10 +355,14 @@ $(document).ready(function() {
   var x1 = 0;
   var y1 = 0;
 
-  // update the first point once mouse is held down
+  // once mouse is held down
   $(".tipckle-redesign").mousedown(function(event) {
+    // update the first point
     x1 = event.pageX;
     y1 = event.pageY;
+
+    // re-show the blinking vertical bar
+    $("input").focus();
   });
 
   // once the mouse is released...
@@ -400,6 +407,9 @@ $(document).ready(function() {
         return this.value + " ";
       });
     }
+
+    // re-show the blinking vertical bar
+    $("input").focus();
   });
 
   // replaces the most recent word with a predictive word
@@ -430,6 +440,9 @@ $(document).ready(function() {
 
     // reset the layout
     reset();
+
+    // re-show the blinking vertical bar
+    $("input").focus();
   });
 
   // submits the text input upon double-clicking
