@@ -427,6 +427,9 @@ $(document).ready(function() {
 
     // hide the container of buttons
     $(".words").hide();
+
+    // reset the layout
+    reset();
   });
 
   // submits the text input upon double-clicking
