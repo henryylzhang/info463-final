@@ -672,8 +672,6 @@ $(document).ready(function() {
       ev.initMouseEvent("click", true, false, self, 0, 0, 0, 0, 0, false, false, false, false, 0, null);
       a.dispatchEvent(ev);
     } else {
-      // StreamAnalyzer goes here
-
       // empty the input
       $(".form-control").val("");
 
