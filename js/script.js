@@ -66,9 +66,9 @@ function updateTeardrops(teardrop) {
 // resets the text to the original layout
 function reset() {
   // change the content in teardrops to original layout
-  $(".NE-text").text("ABCD");
+  $(".NW-text").text("ABCD");
   $(".N-text").text("EFGH");
-  $(".NW-text").text("IJKL");
+  $(".NE-text").text("IJKL");
   $(".W-text").text("MNOP");
   $(".SW-text").text("QRS");
   $(".S-text").text("TUV");
