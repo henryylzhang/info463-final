@@ -1,7 +1,6 @@
 'use strict';
 
 // global variables for XML document
-var XML;
 var USER_DATA;
 var CURRENT_TRIAL;
 var ENTRY_COUNTER;
@@ -205,24 +204,44 @@ function formatDate(date) {
 
 // append a trial to XML
 function appendTrial(counter) {
+  // create a trial element
   var trial = USER_DATA.createElement("Trial");
+
+  // add the trial number
   $(trial).attr("number", counter + 1);
+
+  // if the current trial is 1-5
   if (counter < 5) {
+    // make the testing attribute false
     $(trial).attr("testing", false);
   } else {
+    // otherwise, make it true
     $(trial).attr("testing", true);
   }
+
+  // initialize the number of entries with 0
   $(trial).attr("entries", ENTRY_COUNTER);
+
+  // make the current trial a global variable
   CURRENT_TRIAL = trial;
-  $(XML).find("Swipecycle")[0].appendChild(trial);
+
+  // append the trial
+  USER_DATA.getElementsByTagName("Swipecycle")[0].appendChild(trial);
+
+  // append the presented text to the trial
   appendPresented(counter);
 }
 
 // append the presented phrase to XML
 function appendPresented(counter) {
+  // create a presented element
   var presentedPhrase = USER_DATA.createElement("Presented");
+
+  // make the presented element's text content be the presented phrase
   presentedPhrase.textContent = $(".phrase").text();
-  $(XML).find("Trial")[counter].appendChild(presentedPhrase);
+
+  // append the presented element
+  USER_DATA.getElementsByTagName("Trial")[counter].appendChild(presentedPhrase);
 }
 
 // append an entry to a trial
@@ -236,12 +255,19 @@ function appendEntry(counter, char) {
 
   // if the character is the backspace
   if (char === "&#x8;") {
+    // create an entry element
     var entry = USER_DATA.createElement("Entry");
+
+    // add the char, value, ticks, and seconds attributes
     $(entry).attr("char", char);
     $(entry).attr("value", 8);
     $(entry).attr("ticks", ticks);
     $(entry).attr("seconds", seconds);
-    $(XML).find("Trial")[counter].appendChild(entry);
+
+    // append the entry
+    USER_DATA.getElementsByTagName("Trial")[counter].appendChild(entry);
+
+    // increment the entry counter
     ENTRY_COUNTER++;
   } else {
     // split the character
@@ -260,7 +286,7 @@ function appendEntry(counter, char) {
     
     // for each character in the array
     charArray.forEach(function (character) {
-      // create the entry
+      // create the entry element
       var entry = USER_DATA.createElement("Entry");
 
       // add the character to entry
@@ -279,20 +305,27 @@ function appendEntry(counter, char) {
       $(entry).attr("seconds", seconds);
 
       // append the entry to the trial
-      $(XML).find("Trial")[counter].appendChild(entry);
+      USER_DATA.getElementsByTagName("Trial")[counter].appendChild(entry);
 
       // increase entry counter
       ENTRY_COUNTER++;
     });
   }
+
+  // update the current trial's entry counter
   $(CURRENT_TRIAL).attr("entries", ENTRY_COUNTER);
 }
 
 // append the transcribed phrase to XML
 function appendTranscribed(counter) {
+  // create the transcribed phrase element
   var transcribedPhrase = USER_DATA.createElement("Transcribed");
+
+  // grab the input, excluding any whitespace at end of phrase
   transcribedPhrase.textContent = $("input").val().trim();
-  $(XML).find("Trial")[counter].appendChild(transcribedPhrase);
+
+  // append the transcribed phrase element
+  USER_DATA.getElementsByTagName("Trial")[counter].appendChild(transcribedPhrase);
 }
 
 function north(counter) {
@@ -500,10 +533,8 @@ $(document).ready(function() {
   var y1 = 0;
 
   // initialize user data for XML
-  USER_DATA = document.implementation.createDocument(null, "Swipecycle");
-
-  // create XML document
-  XML = $.parseXML("<Swipecycle />");
+  USER_DATA = document.implementation.createDocument(null, "TextTest");
+  var root = USER_DATA.documentElement;
 
   // initialize the date for xml: https://stackoverflow.com/questions/4898574
   var weekdays = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
@@ -514,11 +545,11 @@ $(document).ready(function() {
   currentDate = weekdays[date.getDay()] + ", " + currentDate;
 
   // add attributes to XML
-  $(XML).find("Swipecycle").attr("version", "1.0.0");
-  $(XML).find("Swipecycle").attr("trials", 45);
-  $(XML).find("Swipecycle").attr("ticks", (date.getTime() * 10000) + 621355968000000000);
-  $(XML).find("Swipecycle").attr("seconds", date.getTime() / 1000);
-  $(XML).find("Swipecycle").attr("date", currentDate);
+  $(root).attr("version", "2.7.2");
+  $(root).attr("trials", 45);
+  $(root).attr("ticks", (date.getTime() * 10000) + 621355968000000000);
+  $(root).attr("seconds", date.getTime() / 1000);
+  $(root).attr("date", currentDate);
 
   // append the first trial
   appendTrial(phraseCounter);
@@ -625,9 +656,9 @@ $(document).ready(function() {
   // submits the text input upon double-clicking
   $(".tipckle-redesign").dblclick(function() {
     // while the latest entry has a whitespace
-    while ($(XML).find("Trial")[phraseCounter].lastChild.getAttribute("char") === " ") {
+    while (USER_DATA.getElementsByTagName("Trial")[phraseCounter].lastChild.getAttribute("char") === " ") {
       // remove that entry with whitespace
-      $(XML).find("Trial")[phraseCounter].lastChild.remove();
+      USER_DATA.getElementsByTagName("Trial")[phraseCounter].lastChild.remove();
 
       // decrement the entry counter
       ENTRY_COUNTER--;
@@ -639,8 +670,6 @@ $(document).ready(function() {
     // append the transcribed phrase to XML
     appendTranscribed(phraseCounter);
 
-    console.log(XML);
-
     // reset the entry counter
     ENTRY_COUNTER = 0;
     
@@ -651,7 +680,7 @@ $(document).ready(function() {
     $(".phrase").empty();
 
     // if the counter reaches 45
-    if (phraseCounter === 3) {
+    if (phraseCounter === 45) {
       // empty the input
       $(".form-control").val("");
 
@@ -666,7 +695,7 @@ $(document).ready(function() {
       // download the XML document
       var a = document.createElement("a"), xml, ev;
       a.download = "Swipecycle_Subject.xml";
-      xml = '<?xml version = "1.0" encoding="utf-8" standalone="yes"?>' + (new XMLSerializer()).serializeToString(XML).replace(/&amp;#x8;/gi, "&#x8;");
+      xml = '<?xml version = "1.0" encoding="utf-8" standalone="yes"?>' + (new XMLSerializer()).serializeToString(USER_DATA).replace(/&amp;#x8;/gi, "&#x8;");
       a.href = 'data:application/octet-stream;base64,' + btoa(xml);
       ev = document.createEvent("MouseEvents");
       ev.initMouseEvent("click", true, false, self, 0, 0, 0, 0, 0, false, false, false, false, 0, null);
