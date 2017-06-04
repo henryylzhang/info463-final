@@ -1,5 +1,11 @@
 'use strict';
 
+// global variables for XML document
+var XML;
+var USER_DATA;
+var CURRENT_TRIAL;
+var ENTRY_COUNTER;
+
 // calculates the angle between 2 points
 function getAngle(x1, y1, x2, y2) {
   // calculate the differences between the X-axis and Y-axis
@@ -144,8 +150,8 @@ function generatePhrases() {
   // add every phrase to the list
   phrasesFile.open("GET", "dict/phrases2.txt", false);
   phrasesFile.onreadystatechange = function () {
-    if(phrasesFile.readyState === 4) {
-      if(phrasesFile.status === 200 || phrasesFile.status == 0) {
+    if (phrasesFile.readyState === 4) {
+      if (phrasesFile.status === 200 || phrasesFile.status == 0) {
         phrases = phrasesFile.responseText.split("\n");
       }
     }
@@ -169,12 +175,135 @@ function choosePhrase(phrases) {
   $(".phrase").append(phrase);
 }
 
-function north() {
+// format the date
+function formatDate(date) {
+  var d = new Date(date);
+  var hh = d.getHours();
+  var m = d.getMinutes();
+  var s = d.getSeconds();
+  var dd = "AM";
+  var h = hh;
+  if (h >= 12) {
+    h = hh - 12;
+    dd = "PM";
+  }
+  if (h === 0) {
+    h = 12;
+  }
+  
+  m = m < 10 ? "0" + m : m;
+  s = s < 10 ? "0" + s : s;
+
+  var pattern = new RegExp("0?" + hh + ":" + m + ":" + s);
+
+  var replacement = h + ":" + m;
+  replacement += ":" + s;
+  replacement += " " + dd;
+
+  return date.replace(pattern, replacement);
+}
+
+// append a trial to XML
+function appendTrial(counter) {
+  var trial = USER_DATA.createElement("Trial");
+  $(trial).attr("number", counter + 1);
+  if (counter < 5) {
+    $(trial).attr("testing", false);
+  } else {
+    $(trial).attr("testing", true);
+  }
+  $(trial).attr("entries", ENTRY_COUNTER);
+  CURRENT_TRIAL = trial;
+  $(XML).find("Swipecycle")[0].appendChild(trial);
+  appendPresented(counter);
+}
+
+// append the presented phrase to XML
+function appendPresented(counter) {
+  var presentedPhrase = USER_DATA.createElement("Presented");
+  presentedPhrase.textContent = $(".phrase").text();
+  $(XML).find("Trial")[counter].appendChild(presentedPhrase);
+}
+
+// append an entry to a trial
+function appendEntry(counter, char) {
+  // make the character into lowercase
+  char = char.toLowerCase();
+
+  // initialize the ticks and seconds
+  var ticks = (new Date().getTime() * 10000) + 621355968000000000;
+  var seconds = new Date().getTime() / 1000;
+
+  // if the character is the backspace
+  if (char === "&#x8;") {
+    var entry = USER_DATA.createElement("Entry");
+    $(entry).attr("char", char);
+    $(entry).attr("value", 8);
+    $(entry).attr("ticks", ticks);
+    $(entry).attr("seconds", seconds);
+    $(XML).find("Trial")[counter].appendChild(entry);
+    ENTRY_COUNTER++;
+  } else {
+    // split the character
+    var charArray = char.split("");
+
+    // if the character is a string
+    if (charArray.length > 1) {
+      // make the last character into a space
+      charArray[charArray.length - 1] = " ";
+    } else {
+      // if character has length of 0, make it into a space
+      if (charArray[0].length === 0) {
+        charArray[charArray.length - 1] = " ";
+      }
+    }
+    
+    // for each character in the array
+    charArray.forEach(function (character) {
+      // create the entry
+      var entry = USER_DATA.createElement("Entry");
+
+      // add the character to entry
+      $(entry).attr("char", character);
+
+      // if character is a blank space, add its ASCII value
+      if (character === " ") {
+        $(entry).attr("value", 32);
+      } else {
+        // add the letter's ASCII value
+        $(entry).attr("value", character.charCodeAt(0));
+      }
+      
+      // add the ticks and seconds
+      $(entry).attr("ticks", ticks);
+      $(entry).attr("seconds", seconds);
+
+      // append the entry to the trial
+      $(XML).find("Trial")[counter].appendChild(entry);
+
+      // increase entry counter
+      ENTRY_COUNTER++;
+    });
+  }
+  $(CURRENT_TRIAL).attr("entries", ENTRY_COUNTER);
+}
+
+// append the transcribed phrase to XML
+function appendTranscribed(counter) {
+  var transcribedPhrase = USER_DATA.createElement("Transcribed");
+  transcribedPhrase.textContent = $("input").val().trim();
+  $(XML).find("Trial")[counter].appendChild(transcribedPhrase);
+}
+
+function north(counter) {
   if ($(".N-text").text().length <= 1) {
     // if north teardrop contains a letter
     if ($(".N-text").text().length === 1) {
       // add the letter
       addLetter($(".N-text").text());
+
+      // append it to XML
+      appendEntry(counter, $(".N-text").text());
 
       // if the input contains anything
       if ($(".form-control").val().length > 0) {
@@ -195,12 +324,15 @@ function north() {
   }
 }
 
-function west() {
+function west(counter) {
   if ($(".W-text").text().length <= 1) {
     // if west teardrop contains a letter
     if ($(".W-text").text().length === 1) {
       // add the letter
       addLetter($(".W-text").text());
+
+      // append it to XML
+      appendEntry(counter, $(".W-text").text());
 
       // if the input contains anything
       if ($(".form-control").val().length > 0) {
@@ -221,12 +353,15 @@ function west() {
   }
 }
 
-function south() {
+function south(counter) {
   if ($(".S-text").text().length <= 1) {
     // if south teardrop contains a letter
     if ($(".S-text").text().length === 1) {
       // add the letter
       addLetter($(".S-text").text());
+
+      // append it to XML
+      appendEntry(counter, $(".S-text").text());
 
       // if the input contains anything
       if ($(".form-control").val().length > 0) {
@@ -247,17 +382,23 @@ function south() {
   }
 }
 
-function east() {
+function east(counter) {
   // if the east teardrop contains a letter
   if ($(".E-text").text().length === 1) {
     // add the letter
     addLetter($(".E-text").text());
+
+    // append it to XML
+    appendEntry(counter, $(".E-text").text());
 
     // reset the layout
     reset();
   } else if ($(".E-text").html() === '<i class="fa fa-arrow-left fa-2x" aria-hidden="true"></i>') { // otherwise, remove a letter if the teardrop has the backarrow
     // grab the input without the most recent letter
     var formerInput = $(".form-control").val().substring(0, $(".form-control").val().length - 1);
+
+    // append the backspace to XML
+    appendEntry(counter, "&#x8;");
 
     // update the input without the most recent letter
     $(".form-control").val(formerInput);
@@ -331,6 +472,9 @@ function southeast() {
 }
 
 $(document).ready(function() {
+  // initialize entry counter
+  ENTRY_COUNTER = 0;
+
   // show the blinking vertical bar
   $("input").focus();
 
@@ -355,6 +499,30 @@ $(document).ready(function() {
   var x1 = 0;
   var y1 = 0;
 
+  // initialize user data for XML
+  USER_DATA = document.implementation.createDocument(null, "Swipecycle");
+
+  // create XML document
+  XML = $.parseXML("<Swipecycle />");
+
+  // initialize the date for xml: https://stackoverflow.com/questions/4898574
+  var weekdays = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+  var months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+  var date = new Date();
+  var currentDate = months[date.getMonth()] + " " + date.getDate() + ", " + date.getFullYear() + " " + date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds();
+  currentDate = formatDate(currentDate);
+  currentDate = weekdays[date.getDay()] + ", " + currentDate;
+
+  // add attributes to XML
+  $(XML).find("Swipecycle").attr("version", "1.0.0");
+  $(XML).find("Swipecycle").attr("trials", 45);
+  $(XML).find("Swipecycle").attr("ticks", (date.getTime() * 10000) + 621355968000000000);
+  $(XML).find("Swipecycle").attr("seconds", date.getTime() / 1000);
+  $(XML).find("Swipecycle").attr("date", currentDate);
+
+  // append the first trial
+  appendTrial(phraseCounter);
+
   // once mouse is held down
   $(".tipckle-redesign").mousedown(function(event) {
     // update the first point
@@ -376,36 +544,39 @@ $(document).ready(function() {
       if (angle > 20 && angle <= 65) {
         northwest();
       } else if (angle > 65 && angle <= 115) {
-        north();
+        north(phraseCounter);
       } else if (angle > 115 && angle <= 160) {
         northeast();
       } else if (angle > 160 && angle <= 200) {
-        east();
+        east(phraseCounter);
       } else if (angle > 200 && angle <= 250) {
         southeast();
       } else if (angle > 250 && angle <= 290) {
-        south();
+        south(phraseCounter);
       } else if (angle > 290 && angle <= 340) {
         southwest();
       } else { // angle > 340 or angle is <= 20
-        west();
+        west(phraseCounter);
       }
     } else if ((x1 === event.pageX && y1 !== event.pageY) || (x1 !== event.pageX && y1 === event.pageY)) {
       // if the X-axis is the same, but Y-axis isn't (or vice versa), check if the angle is exactly N, E, S, or W
       if (angle === 0) {
-        west();
+        west(phraseCounter);
       } else if (angle === 90) {
-        north();
+        north(phraseCounter);
       } else if (angle === 180) {
-        east();
+        east(phraseCounter);
       } else { // angle === 270
-        south();
+        south(phraseCounter);
       }
     } else {
       // adds space to input if X-axis and Y-axis are the same
       $(".form-control").val(function() {
         return this.value + " ";
       });
+
+      // append the space to XML
+      appendEntry(phraseCounter, " ");
     }
 
     // re-show the blinking vertical bar
@@ -416,6 +587,12 @@ $(document).ready(function() {
   $("button").click(function() {
     // grab the current sentence
     var sentence = $(".form-control").val().split(" ");
+
+    // grab the rest of the word that is not typed
+    var cutoffWord = $(this).text().substring(sentence[sentence.length - 1].length);
+    
+    // add that part of the word to XML
+    appendEntry(phraseCounter, cutoffWord);
 
     // replace the latest word with the word in the button
     sentence[sentence.length - 1] = $(this).text();
@@ -447,6 +624,26 @@ $(document).ready(function() {
 
   // submits the text input upon double-clicking
   $(".tipckle-redesign").dblclick(function() {
+    // while the latest entry has a whitespace
+    while ($(XML).find("Trial")[phraseCounter].lastChild.getAttribute("char") === " ") {
+      // remove that entry with whitespace
+      $(XML).find("Trial")[phraseCounter].lastChild.remove();
+
+      // decrement the entry counter
+      ENTRY_COUNTER--;
+    }
+
+    // update number of entries
+    $(CURRENT_TRIAL).attr("entries", ENTRY_COUNTER);
+
+    // append the transcribed phrase to XML
+    appendTranscribed(phraseCounter);
+
+    console.log(XML);
+
+    // reset the entry counter
+    ENTRY_COUNTER = 0;
+    
     // increase the counter
     phraseCounter++;
 
@@ -454,12 +651,26 @@ $(document).ready(function() {
     $(".phrase").empty();
 
     // if the counter reaches 45
-    if (phraseCounter === 45) {
+    if (phraseCounter === 3) {
       // empty the input
       $(".form-control").val("");
 
+      // remove Swipecycle
+      $(".input-container").hide();
+      $(".tipckle-redesign").hide();
+
       // alert that testing has ended
-      alert("Test is over.");
+      $(".phrase-box h2").text("Thank you for participating in our study.");
+      $(".phrase").text("An .xml file download containing your inputs will be starting shortly.");
+
+      // download the XML document
+      var a = document.createElement("a"), xml, ev;
+      a.download = "Swipecycle_Subject.xml";
+      xml = '<?xml version = "1.0" encoding="utf-8" standalone="yes"?>' + (new XMLSerializer()).serializeToString(XML).replace(/&amp;#x8;/gi, "&#x8;");
+      a.href = 'data:application/octet-stream;base64,' + btoa(xml);
+      ev = document.createEvent("MouseEvents");
+      ev.initMouseEvent("click", true, false, self, 0, 0, 0, 0, 0, false, false, false, false, 0, null);
+      a.dispatchEvent(ev);
     } else {
       // StreamAnalyzer goes here
 
@@ -468,6 +679,9 @@ $(document).ready(function() {
 
       // choose and display a new phrase
       choosePhrase(phrases);
+
+      // create a new trial
+      appendTrial(phraseCounter);
     }
   });
 });
