@@ -226,7 +226,7 @@ function appendTrial(counter) {
   CURRENT_TRIAL = trial;
 
   // append the trial
-  USER_DATA.getElementsByTagName("Swipecycle")[0].appendChild(trial);
+  USER_DATA.getElementsByTagName("TextTest")[0].appendChild(trial);
 
   // append the presented text to the trial
   appendPresented(counter);
